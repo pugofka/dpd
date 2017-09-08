@@ -1,6 +1,6 @@
 <?php
 
-namespace Pugofka\Pdp;
+namespace Pugofka\Dpd;
 
 
 class Dpd

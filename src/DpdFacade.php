@@ -6,7 +6,7 @@
  * Time: 1:19
  */
 
-namespace Pugofka\Pdp;
+namespace Pugofka\Dpd;
 
 use Illuminate\Support\Facades\Facade;
 

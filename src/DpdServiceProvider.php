@@ -1,6 +1,6 @@
 <?php
 
-namespace Pugofka\Pdp;
+namespace Pugofka\Dpd;
 
 use Illuminate\Support\ServiceProvider;
 
