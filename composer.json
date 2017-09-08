@@ -1,0 +1,32 @@
+{
+    "name": "pugofka/dpd",
+    "description": "laravel package for work with DPD shipment",
+    "keywords": ["laravel", "dpd", "api", "shipment"],
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Yushkevich Vitaly",
+            "email": "yushkevichv@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "autoload": {
+        "psr-4": {
+            "Pugofka\\Dpd\\": "src/"
+        }
+    },
+    "require": {
+        "illuminate/support": "~5"
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Pugofka\\Dpd\\DpdServiceProvider"
+            ],
+            "aliases": {
+               "Dpd": "Pugofka\\Pdp\\DpdFacade"
+            }
+        }
+    }
+}
