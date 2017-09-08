@@ -18,12 +18,5 @@
     },
     "require": {
         "illuminate/support": "~5"
-    },
-    "extra": {
-        "laravel": {
-            "providers": [
-                "Pugofka\\Dpd\\DpdServiceProvider"
-            ]
-        }
     }
 }
