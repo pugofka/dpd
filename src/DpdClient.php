@@ -4,13 +4,13 @@ namespace Pugofka\Dpd;
 
 class DpdClient
 {
-    protected $number;
-    protected $key;
+    public $number;
+    public $key;
+    public $url;
     protected $testMode;
-    protected $url;
 
-    const API_URL_TEST = 'http://wstest.dpd.ru/services/';
-    const API_URL_PROD = 'http://ws.dpd.ru/services/';
+    const API_URL_TEST = 'http://wstest.dpd.ru/rest/application.wadl';
+    const API_URL_PROD = 'http://ws.dpd.ru/rest/application.wadl';
 
     public function __construct()
     {
