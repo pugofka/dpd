@@ -12,7 +12,6 @@ class DpdServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__.'/../config/dpd.php' => config_path('dpd.php'),
         ]);
-//        require __DIR__ . '/routes/web.php';
     }
 
     public function register()
@@ -20,9 +19,11 @@ class DpdServiceProvider extends ServiceProvider
         $this->mergeConfigFrom(__DIR__.'/../config/dpd.php', 'dpd');
         $dpdConfig = config('dpd');
 
-        $this->app->bind(Dpd::class, function() {
+        $this->app->bind(Dpd::class, function()  {
             return new Dpd();
         });
+
     }
+
 
 }
