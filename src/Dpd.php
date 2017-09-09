@@ -2,8 +2,6 @@
 
 namespace Pugofka\Dpd;
 
-use Pugofka\Dpd\DpdClient;
-
 class Dpd
 {
     protected $number;
