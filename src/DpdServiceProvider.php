@@ -19,6 +19,10 @@ class DpdServiceProvider extends ServiceProvider
         $this->mergeConfigFrom(__DIR__.'/../config/dpd.php', 'dpd');
         $dpdConfig = config('dpd');
 
+        $this->app->singleton(DpdClient::class, function (){
+            return new DpdClient();
+        });
+
         $this->app->bind(Dpd::class, function()  {
             return new Dpd();
         });

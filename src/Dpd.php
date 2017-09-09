@@ -4,16 +4,11 @@ namespace Pugofka\Dpd;
 
 class Dpd
 {
-    protected $number;
-    protected $key;
-    protected $testMode;
+    protected $client;
 
     public function __construct()
     {
-        $this->number = config('dpd.number');
-        $this->key = config('dpd.key');
-        $this->testMode = config('dpd.testMode');
-
+        $this->client = new DpdClient();
     }
 
     public function hello()
