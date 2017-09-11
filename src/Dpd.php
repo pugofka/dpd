@@ -120,5 +120,47 @@ class Dpd
 
     }
 
+    public function getCostCommon (
+        string $from,
+        string $to,
+        bool $selfPickup = true,
+        bool $selfDelivery=false,
+        float $weight = 0,
+        float $declaredValue = 0,
+        float $volume = null,
+        $pickupDate = null
+    )
+    {
+        $client = new \SoapClient($this->client->url."calculator2?wsdl",
+            [
+                'trace' => true,
+                'keep_alive' => false
+            ]
+        );
 
+        $data['auth'] = $this->client->getAuthData();
+        $data['selfDelivery'] = $selfDelivery;
+        $data['selfPickup'] = $selfPickup;
+        $data['weight'] = $weight;
+        if($volume)
+            $data['volume'] = $volume;
+        if($declaredValue)
+            $data['declaredValue'] = $declaredValue;
+
+        $cityFrom = $this->findCity($from);
+        $data['pickup'] = [
+            'cityId' => $cityFrom->cityId,
+            'cityName'  => $cityFrom->cityName,
+        ];
+
+        $cityTo = $this->findCity($to);
+        $data['delivery' ] = [
+            'cityId' => $cityTo->cityId,
+            'cityName'  => $cityTo->cityName,
+        ];
+
+        $request['request'] = $data; //помещаем наш масив авторизации в масив запроса request.
+        $result = $client->getServiceCost2($request); //обращаемся к функции getCitiesCashPay  и получаем список городов.
+        return $result = self::stdToArray($result);
+    }
 }
