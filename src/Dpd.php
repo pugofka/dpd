@@ -2,6 +2,7 @@
 
 namespace Pugofka\Dpd;
 
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Cache;
 
 class Dpd
@@ -14,11 +15,6 @@ class Dpd
     {
         $this->client = new DpdClient();
 
-    }
-
-    public function hello()
-    {
-        return 'hello';
     }
 
     public function getCities()
@@ -69,57 +65,20 @@ class Dpd
 
     }
 
-    public function getCostByParametres(
-            string $from,
-            string $to,
-            bool $selfPickup = true,
-            bool $selfDelivery=false,
-            float $weight = 0,
-            float $declaredValue = 0,
-            float $volume = null,
-            $pickupDate = null
-        )
-    {
-        $client = new \SoapClient($this->client->url."calculator2?wsdl",
-            [
-                'trace' => true,
-                'keep_alive' => false
-            ]
-        );
 
-        $data['auth'] = $this->client->getAuthData();
-        $data['selfDelivery'] = $selfDelivery;
-        $data['selfDelivery'] = $selfDelivery;
-        $data['selfPickup'] = $selfPickup;
-        $data['weight'] = $weight;
-//        $data['declaredValue'] = $declaredValue;
-        $cityFrom = $this->findCity($from);
-        $data['pickup'] = [
-            'cityId' => $cityFrom->cityId,
-            'cityName'  => $cityFrom->cityName,
-        ];
-        $cityTo = $this->findCity($to);
-        $data['delivery' ] = [
-            'cityId' => $cityTo->cityId,
-            'cityName'  => $cityTo->cityName,
-        ];
-
-//        @todo need to refactor
-        $data['parcel'] = [
-            'weight' => 1,
-            'length' => 1,
-            'width' => 1,
-            'height' => 1 ,
-            'quantity' => 1
-        ];
-
-
-        $request['request'] = $data; //помещаем наш масив авторизации в масив запроса request.
-        $result = $client->getServiceCostByParcels2($request); //обращаемся к функции getCitiesCashPay  и получаем список городов.
-        return $result = self::stdToArray($result);
-
-    }
-
+    /**
+     * Method for get common cost from DPD.
+     *
+     * @param string $from
+     * @param string $to
+     * @param bool $selfPickup
+     * @param bool $selfDelivery
+     * @param float $weight
+     * @param float $declaredValue
+     * @param null $pickupDate
+     * @param float|null $volume
+     * @return array
+     */
     public function getCostCommon (
         string $from,
         string $to,
@@ -127,8 +86,8 @@ class Dpd
         bool $selfDelivery=false,
         float $weight = 0,
         float $declaredValue = 0,
-        float $volume = null,
-        $pickupDate = null
+        $pickupDate = null,
+        float $volume = null
     )
     {
         $client = new \SoapClient($this->client->url."calculator2?wsdl",
@@ -138,29 +97,30 @@ class Dpd
             ]
         );
 
-        $data['auth'] = $this->client->getAuthData();
-        $data['selfDelivery'] = $selfDelivery;
-        $data['selfPickup'] = $selfPickup;
-        $data['weight'] = $weight;
-        if($volume)
-            $data['volume'] = $volume;
-        if($declaredValue)
-            $data['declaredValue'] = $declaredValue;
-
         $cityFrom = $this->findCity($from);
+        $cityTo = $this->findCity($to);
+
+        $data['auth'] = $this->client->getAuthData();
         $data['pickup'] = [
             'cityId' => $cityFrom->cityId,
             'cityName'  => $cityFrom->cityName,
         ];
-
-        $cityTo = $this->findCity($to);
         $data['delivery' ] = [
             'cityId' => $cityTo->cityId,
             'cityName'  => $cityTo->cityName,
         ];
+        $data['selfPickup'] = $selfPickup;
+        $data['selfDelivery'] = $selfDelivery;
+        $data['weight'] = $weight;
+        if($volume)
+            $data['volume'] = $volume;
+        if($pickupDate)
+            $data['pickupDate'] = Carbon::parse($pickupDate)->format('Y-m-d');
+        if($declaredValue)
+            $data['declaredValue'] = $declaredValue;
 
         $request['request'] = $data; //помещаем наш масив авторизации в масив запроса request.
-        $result = $client->getServiceCost2($request); //обращаемся к функции getCitiesCashPay  и получаем список городов.
+        $result = $client->getServiceCost2($request); //обращаемся к функции getServiceCost2 и получаем варианты доставки.
         return $result = self::stdToArray($result);
     }
 }
