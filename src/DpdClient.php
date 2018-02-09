@@ -23,6 +23,8 @@ class DpdClient
     public function __construct()
     {
         $cache = app(Repository::class);
+        $this->cache = $cache;
+
         $this->number = config('dpd.number');
         $this->key = config('dpd.key');
         $this->testMode = config('dpd.test_mode');
@@ -32,8 +34,6 @@ class DpdClient
             $this->url = self::API_URL_TEST;
         else
             $this->url = self::API_URL_PROD;
-
-        $this->cache = $cache;
     }
 
     public function getAuthData()

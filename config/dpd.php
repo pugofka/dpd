@@ -22,12 +22,4 @@ return [
      */
     'cache_lifetime_in_minutes' => 60 * 8,
 
-    /*
-     * Here you may configure the "store" that the underlying DPD_Client will
-     * use to store it's data.
-     *
-     */
-    'cache' => [
-        'store' => 'file',
-    ],
 ];

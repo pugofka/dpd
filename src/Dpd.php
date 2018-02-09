@@ -14,12 +14,15 @@ class Dpd
     public function __construct()
     {
         $this->client = new DpdClient();
-
     }
 
+    /**
+     * Get all cities from DPD and store it in Cache
+     *
+     * @return \Illuminate\Support\Collection
+     */
     public function getCities()
     {
-
         if (Cache::has(self::DPD_CITIES_CACHE_NAME)) {
             $cities = collect(Cache::get(self::DPD_CITIES_CACHE_NAME));
         }
@@ -44,24 +47,23 @@ class Dpd
         return $cities;
     }
 
-    protected function stdToArray($obj)
-    {
-        $rc = (array)$obj;
-        foreach($rc as $key=>$item){
-            $rc[$key]= (array)$item;
-            foreach($rc[$key] as $keys=>$items){
-                $rc[$key][$keys]= (array)$items;
-            }
-        }
-        return $rc;
-    }
 
+    /**
+     *  Find City in DPD from
+     *
+     * @param string $cityName
+     * @return object
+     * @throws \Exception
+     */
     public function findCity(string $cityName)
     {
         $cities = $this->getCities();
-        $city = (object) $cities->whereIn('cityName', $cityName)->first();
+        $city = (object) $cities->whereIn('cityName', $cityName);
 
-        return $city;
+        if($city->count() == 0)
+            throw new \Exception('City is not found', 404);
+
+        return $city->first();
 
     }
 
@@ -122,5 +124,24 @@ class Dpd
         $request['request'] = $data; //помещаем наш масив авторизации в масив запроса request.
         $result = $client->getServiceCost2($request); //обращаемся к функции getServiceCost2 и получаем варианты доставки.
         return $result = self::stdToArray($result);
+    }
+
+
+    /**
+     *  Reformat response from DPD
+     *
+     * @param $obj
+     * @return array
+     */
+    protected function stdToArray($obj)
+    {
+        $rc = (array)$obj;
+        foreach($rc as $key=>$item){
+            $rc[$key]= (array)$item;
+            foreach($rc[$key] as $keys=>$items){
+                $rc[$key][$keys]= (array)$items;
+            }
+        }
+        return $rc;
     }
 }
