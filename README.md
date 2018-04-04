@@ -14,8 +14,8 @@ $dpd->getCities();
 
 // Посчитать стоимость доставки
 $dpd->getCostCommon (
-    string $from, // Город отправления
-    string $to, // Город назначения
+    string $from, // ID города отправления
+    string $to, // ID города назначения
     bool $selfPickup = true, // Самопривоз на терминал.
     bool $selfDelivery=false, // Самовывоз с терминала
     float $weight = 0, // вес в кг
