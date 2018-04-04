@@ -67,6 +67,25 @@ class Dpd
 
     }
 
+    /**
+     * Это дополнительный метод, для поиска города по ID
+     * @param string $cityId
+     * @return mixed
+     * @throws \Exception
+     *
+     */
+    public function findCityId(string $cityId)
+    {
+        $cities = $this->getCities();
+        $city = (object) $cities->whereIn('cityId', $cityId);
+
+        if($city->count() == 0)
+            throw new \Exception('City is not found', 404);
+
+        return $city->first();
+
+    }
+
 
     /**
      * Method for get common cost from DPD.
@@ -99,17 +118,18 @@ class Dpd
             ]
         );
 
-        $cityFrom = $this->findCity($from);
-        $cityTo = $this->findCity($to);
+        $cityFrom = $this->findCityId($from);
+        $cityTo = $this->findCityId($to);
 
         $data['auth'] = $this->client->getAuthData();
         $data['pickup'] = [
-            'cityId' => $cityFrom->cityId,
-            'cityName'  => $cityFrom->cityName,
+            'cityId' => $cityFrom['cityId'],
+            'cityName'  => $cityFrom['cityName'],
         ];
-        $data['delivery' ] = [
-            'cityId' => $cityTo->cityId,
-            'cityName'  => $cityTo->cityName,
+
+        $data['delivery'] = [
+            'cityId' => $cityTo['cityId'],
+            'cityName'  => $cityTo['cityName'],
         ];
         $data['selfPickup'] = $selfPickup;
         $data['selfDelivery'] = $selfDelivery;
