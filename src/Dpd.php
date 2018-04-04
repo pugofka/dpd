@@ -55,7 +55,7 @@ class Dpd
      * @return object
      * @throws \Exception
      */
-    public function findCity(string $cityName)
+    public function findCityByName(string $cityName)
     {
         $cities = $this->getCities();
         $city = (object) $cities->whereIn('cityName', $cityName);
@@ -74,7 +74,7 @@ class Dpd
      * @throws \Exception
      *
      */
-    public function findCityId(string $cityId)
+    public function findCityById(string $cityId)
     {
         $cities = $this->getCities();
         $city = (object) $cities->whereIn('cityId', $cityId);
@@ -118,8 +118,8 @@ class Dpd
             ]
         );
 
-        $cityFrom = $this->findCityId($from);
-        $cityTo = $this->findCityId($to);
+        $cityFrom = $this->findCityById($from);
+        $cityTo = $this->findCityById($to);
 
         $data['auth'] = $this->client->getAuthData();
         $data['pickup'] = [
