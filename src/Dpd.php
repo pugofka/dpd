@@ -143,7 +143,15 @@ class Dpd
 
         $request['request'] = $data; //помещаем наш масив авторизации в масив запроса request.
         $result = $client->getServiceCost2($request); //обращаемся к функции getServiceCost2 и получаем варианты доставки.
-        return $result = self::stdToArray($result);
+        $result = self::stdToArray($result);
+        if(isset($result['errorMessage'])) {
+            if(is_string($result['errorMessage']))
+                $error = $result['errorMessage'];
+            else
+                $error = json_decode($result['errorMessage']);
+            throw new \Exception("Error from DPD: ".$error, 400);
+        }
+        return $result;
     }
 
 
