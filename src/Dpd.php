@@ -108,6 +108,7 @@ class Dpd
         float $weight = 0,
         float $declaredValue = 0,
         $pickupDate = null,
+        string $serviceCode = null,
         float $volume = null
     )
     {
@@ -140,6 +141,8 @@ class Dpd
             $data['pickupDate'] = Carbon::parse($pickupDate)->format('Y-m-d');
         if($declaredValue)
             $data['declaredValue'] = $declaredValue;
+        if($serviceCode)
+            $data['serviceCode'] = $serviceCode;
 
         $request['request'] = $data; //помещаем наш масив авторизации в масив запроса request.
         $result = $client->getServiceCost2($request); //обращаемся к функции getServiceCost2 и получаем варианты доставки.
