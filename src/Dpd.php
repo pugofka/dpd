@@ -97,6 +97,7 @@ class Dpd
      * @param float $weight
      * @param float $declaredValue
      * @param null $pickupDate
+     * @param string|null $serviceCode
      * @param float|null $volume
      * @return array
      */
