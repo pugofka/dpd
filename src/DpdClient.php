@@ -20,17 +20,17 @@ class DpdClient
     const API_URL_TEST = 'http://wstest.dpd.ru/services/';
     const API_URL_PROD = 'http://ws.dpd.ru/services/';
 
-    public function __construct()
+    public function __construct($number = null, $key = null, $testMode = null, $cacheLifeTimeInMinutes = null)
     {
         $cache = app(Repository::class);
         $this->cache = $cache;
 
-        $this->number = config('dpd.number');
-        $this->key = config('dpd.key');
-        $this->testMode = config('dpd.test_mode');
-        $this->cacheLifeTimeInMinutes = config('dpd.cache_lifetime_in_minutes', 0);
+        $number ? $this->number = $number : $this->number = config('dpd.number');
+        $key ? $this->key = $key : $this->key = config('dpd.key');
+        $testMode ? $this->testMode = $testMode : $this->testMode = config('dpd.test_mode');
+        $cacheLifeTimeInMinutes ? $this->cacheLifeTimeInMinutes = $cacheLifeTimeInMinutes : $this->cacheLifeTimeInMinutes = config('dpd.cache_lifetime_in_minutes', 0);
 
-        if($this->testMode)
+        if ($this->testMode)
             $this->url = self::API_URL_TEST;
         else
             $this->url = self::API_URL_PROD;

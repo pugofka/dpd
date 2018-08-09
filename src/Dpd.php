@@ -11,9 +11,9 @@ class Dpd
 
     protected $client;
 
-    public function __construct()
+    public function __construct($number = null, $key = null, $testMode = null, $cacheLifeTimeInMinutes = null)
     {
-        $this->client = new DpdClient();
+        $this->client = new DpdClient($number, $key , $testMode , $cacheLifeTimeInMinutes );
     }
 
     /**
