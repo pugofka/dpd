@@ -1,27 +1,27 @@
 # dpd
 
-Библиотека для работы с сервисом доставки DPD
+Laravel package for DPD logistic (Russian logistic service)
 
-### Использование
+## Usage
 
 ```php
 use Pugofka\Dpd\Dpd;
 
 $dpd = new Dpd();
 
-// Получить список городов
+// get all available cities
 $dpd->getCities();
 
-// Посчитать стоимость доставки
+// calculate delivery cost
 $dpd->getCostCommon (
-    string $from, // ID города отправления
-    string $to, // ID города назначения
-    bool $selfPickup = true, // Самопривоз на терминал.
-    bool $selfDelivery=false, // Самовывоз с терминала
-    float $weight = 0, // вес в кг
-    float $declaredValue = 0, // Объявленная ценность
-    $pickupDate = null, // Предполагаемая дата приёма груза, 2014-05-21
-    float $volume = null // Объем в м3
+    string $from, // ID city from
+    string $to, // ID city to
+    bool $selfPickup = true, 
+    bool $selfDelivery=false, 
+    float $weight = 0, // weight in kg
+    float $declaredValue = 0, 
+    $pickupDate = null, // format 2014-05-21
+    float $volume = null 
 );
 ```
     
