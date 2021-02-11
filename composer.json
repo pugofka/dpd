@@ -17,7 +17,8 @@
         }
     },
     "require": {
-        "illuminate/support": "~5"
+        "illuminate/support": "~5",
+        "nategood/httpful": "^0.3.2"
     },
     "extra": {
         "laravel": {

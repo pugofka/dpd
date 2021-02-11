@@ -11,9 +11,30 @@ class Dpd
 
     protected $client;
 
-    public function __construct($number = null, $key = null, $testMode = null, $cacheLifeTimeInMinutes = null)
+    public function __construct($number = null, $key = null, $testMode = null, $cacheLifeTimeInMinutes = null, $rest = false)
     {
-        $this->client = new DpdClient($number, $key , $testMode , $cacheLifeTimeInMinutes );
+        $this->client = new DpdClient($number, $key , $testMode , $cacheLifeTimeInMinutes, $rest);
+    }
+
+    public function getShipmentList($eshopOrderNum, $phone, $email, $orderNum)
+    {
+        $data['auth'] = $this->client->getAuthData();
+        $data['eshopOrderNum'] = $eshopOrderNum;
+        $data['phone'] = $phone;
+        $data['email'] = $email;
+        $data['orderNum'] = $orderNum;
+
+        return $this->sendRestRequest($data, 'getShipmentList');
+    }
+
+    public function getParcelShopList($sessionId, $orderId)
+    {
+        $data['auth'] = [
+            'sessionId' => $sessionId,
+            'orderId' => $orderId
+        ];
+
+        return $this->sendRestRequest($data, 'getParcelShopList');
     }
 
     /**
@@ -156,6 +177,18 @@ class Dpd
             throw new \Exception("Error from DPD: ".$error, 400);
         }
         return $result;
+    }
+
+    protected function sendRestRequest($data, $path)
+    {
+        $json = json_encode($data);
+
+        $response = \Httpful\Request::post($this->client->url . $path)
+            ->body($json)
+            ->sendsJson()
+            ->send();
+
+        return json_decode($response->raw_body);
     }
 
 

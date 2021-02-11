@@ -19,8 +19,10 @@ class DpdClient
 
     const API_URL_TEST = 'http://wstest.dpd.ru/services/';
     const API_URL_PROD = 'http://ws.dpd.ru/services/';
+    const API_APP_URL_TEST = 'http://wstest.dpd.ru/rest/predict/';
+    const API_APP_URL_PROD = 'http://ws.dpd.ru/rest/predict/';
 
-    public function __construct($number = null, $key = null, $testMode = null, $cacheLifeTimeInMinutes = null)
+    public function __construct($number = null, $key = null, $testMode = null, $cacheLifeTimeInMinutes = null, $rest = false)
     {
         $cache = app(Repository::class);
         $this->cache = $cache;
@@ -31,9 +33,9 @@ class DpdClient
         $cacheLifeTimeInMinutes ? $this->cacheLifeTimeInMinutes = $cacheLifeTimeInMinutes : $this->cacheLifeTimeInMinutes = config('dpd.cache_lifetime_in_minutes', 0);
 
         if ($this->testMode)
-            $this->url = self::API_URL_TEST;
+            $rest ? $this->url = self::API_APP_URL_TEST : $this->url = self::API_URL_TEST;
         else
-            $this->url = self::API_URL_PROD;
+            $rest ? $this->url = self::API_APP_URL_PROD : $this->url = self::API_URL_PROD;
     }
 
     public function getAuthData()
