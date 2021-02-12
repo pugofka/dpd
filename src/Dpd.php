@@ -68,6 +68,29 @@ class Dpd
         return $cities;
     }
 
+    /**
+     * Get all cities from DPD and store it in Cache
+     *
+     * @return \Illuminate\Support\Collection
+     */
+    public function getParcelShops()
+    {
+        $client = new \SoapClient($this->client->url."geography2?wsdl",
+            [
+                'trace' => true,
+                'keep_alive' => false
+            ]
+        );
+
+        $data['auth'] = $this->client->getAuthData();
+
+        $request['request'] = $data; //помещаем наш масив авторизации в масив запроса request.
+        $result = $client->getParcelShops($request); //обращаемся к функции getCitiesCashPay  и получаем список городов.
+        $result = self::stdToArray($result);
+
+        return collect($result['return']);
+    }
+
 
     /**
      *  Find City in DPD from
