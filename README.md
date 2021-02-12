@@ -23,5 +23,8 @@ $dpd->getCostCommon (
     $pickupDate = null, // format 2014-05-21
     float $volume = null 
 );
+
+// get all available pickpoints
+$dpd->getPickPoints();
 ```
     

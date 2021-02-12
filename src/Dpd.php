@@ -13,7 +13,7 @@ class Dpd
 
     public function __construct($number = null, $key = null, $testMode = null, $cacheLifeTimeInMinutes = null)
     {
-        $this->client = new DpdClient($number, $key , $testMode , $cacheLifeTimeInMinutes );
+        $this->client = new DpdClient($number, $key , $testMode , $cacheLifeTimeInMinutes);
     }
 
     /**
@@ -45,6 +45,29 @@ class Dpd
         }
 
         return $cities;
+    }
+
+    /**
+     * Get all pickpoints from DPD
+     *
+     * @return \Illuminate\Support\Collection
+     */
+    public function getPickPoints()
+    {
+        $client = new \SoapClient($this->client->url."geography2?wsdl",
+            [
+                'trace' => true,
+                'keep_alive' => false
+            ]
+        );
+
+        $data['auth'] = $this->client->getAuthData();
+
+        $request['request'] = $data;
+        $result = $client->getParcelShops($request);
+        $result = self::stdToArray($result);
+
+        return collect($result['return']);
     }
 
 
@@ -157,7 +180,6 @@ class Dpd
         }
         return $result;
     }
-
 
     /**
      *  Reformat response from DPD
