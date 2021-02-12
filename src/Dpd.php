@@ -48,11 +48,11 @@ class Dpd
     }
 
     /**
-     * Get all cities from DPD and store it in Cache
+     * Get all pickpoints from DPD
      *
      * @return \Illuminate\Support\Collection
      */
-    public function getParcelShops()
+    public function getPickPoints()
     {
         $client = new \SoapClient($this->client->url."geography2?wsdl",
             [
