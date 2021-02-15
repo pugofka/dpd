@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Cache;
 class Dpd
 {
     const DPD_CITIES_CACHE_NAME = 'dpd_cities';
+    const DPD_TERMINALS_CACHE_NAME = 'dpd_terminals';
 
     protected $client;
 
@@ -71,6 +72,35 @@ class Dpd
         $result = self::stdToArray($result);
 
         return collect($result['return']);
+    }
+
+    /**
+     * Get all terminals from DPD
+     *
+     * @return \Illuminate\Support\Collection
+     */
+    public function getTerminals()
+    {
+        if (Cache::has(self::DPD_TERMINALS_CACHE_NAME)) {
+            $terminals = collect(Cache::get(self::DPD_TERMINALS_CACHE_NAME));
+        }
+        else {
+            $terminals = Cache::remember(self::DPD_TERMINALS_CACHE_NAME, $this->client->cacheLifeTimeInMinutes, function () {
+                $client = new \SoapClient($this->client->url."geography2?wsdl",
+                    [
+                        'trace' => true,
+                        'keep_alive' => false
+                    ]
+                );
+
+                $data['auth'] = $this->client->getAuthData();
+                $result = $client->getTerminalsSelfDelivery2($data);
+                $result = self::stdToArray($result);
+                return collect($result['return']);
+            });
+        }
+
+        return $terminals;
     }
 
 
