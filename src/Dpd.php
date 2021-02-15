@@ -52,7 +52,7 @@ class Dpd
      *
      * @return \Illuminate\Support\Collection
      */
-    public function getPickPoints()
+    public function getPickPoints($cityCode = null)
     {
         $client = new \SoapClient($this->client->url."geography2?wsdl",
             [
@@ -64,6 +64,9 @@ class Dpd
         $data['auth'] = $this->client->getAuthData();
 
         $request['request'] = $data;
+        if ($cityCode) {
+            $request['cityCode'] = $cityCode;
+        }
         $result = $client->getParcelShops($request);
         $result = self::stdToArray($result);
 
