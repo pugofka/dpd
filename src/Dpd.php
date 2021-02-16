@@ -61,6 +61,9 @@ class Dpd
         $result = $this->soapClient->getParcelShops($request);
         $result = self::stdToArray($result);
 
+        if(!isset($result['return']))
+            throw new \Exception('Wrong response structure', 400);
+
         return collect($result['return'])->get('parcelShop');
     }
 
@@ -74,6 +77,9 @@ class Dpd
         $data['auth'] = $this->client->getAuthData();
         $result = $this->soapClient->getTerminalsSelfDelivery2($data);
         $result = self::stdToArray($result);
+
+        if(!isset($result['return']))
+            throw new \Exception('Wrong response structure', 400);
 
         return collect($result['return'])->get('terminal');
     }
