@@ -10,10 +10,17 @@ class Dpd
     const DPD_CITIES_CACHE_NAME = 'dpd_cities';
 
     protected $client;
+    protected $soapClient;
 
     public function __construct($number = null, $key = null, $testMode = null, $cacheLifeTimeInMinutes = null)
     {
         $this->client = new DpdClient($number, $key , $testMode , $cacheLifeTimeInMinutes);
+        $this->soapClient = new \SoapClient($this->client->url."geography2?wsdl",
+            [
+                'trace' => true,
+                'keep_alive' => false
+            ]
+        );
     }
 
     /**
@@ -28,17 +35,9 @@ class Dpd
         }
         else {
             $cities = Cache::remember(self::DPD_CITIES_CACHE_NAME, $this->client->cacheLifeTimeInMinutes, function () {
-                $client = new \SoapClient($this->client->url."geography2?wsdl",
-                    [
-                        'trace' => true,
-                        'keep_alive' => false
-                    ]
-                );
-
                 $data['auth'] = $this->client->getAuthData();
-
                 $request['request'] = $data; //помещаем наш масив авторизации в масив запроса request.
-                $result = $client->getCitiesCashPay($request); //обращаемся к функции getCitiesCashPay  и получаем список городов.
+                $result = $this->soapClient->getCitiesCashPay($request); //обращаемся к функции getCitiesCashPay  и получаем список городов.
                 $result = self::stdToArray($result);
                 return collect($result['return']);
             });
@@ -54,23 +53,15 @@ class Dpd
      */
     public function getPickPoints($cityCode = null)
     {
-        $client = new \SoapClient($this->client->url."geography2?wsdl",
-            [
-                'trace' => true,
-                'keep_alive' => false
-            ]
-        );
-
         $data['auth'] = $this->client->getAuthData();
-
         $request['request'] = $data;
         if ($cityCode) {
             $request['cityCode'] = $cityCode;
         }
-        $result = $client->getParcelShops($request);
+        $result = $this->soapClient->getParcelShops($request);
         $result = self::stdToArray($result);
 
-        return collect($result['return']);
+        return collect($result['return'])->get('parcelShop');
     }
 
     /**
@@ -80,18 +71,11 @@ class Dpd
      */
     public function getTerminals()
     {
-        $client = new \SoapClient($this->client->url."geography2?wsdl",
-            [
-                'trace' => true,
-                'keep_alive' => false
-            ]
-        );
-
         $data['auth'] = $this->client->getAuthData();
-        $result = $client->getTerminalsSelfDelivery2($data);
+        $result = $this->soapClient->getTerminalsSelfDelivery2($data);
         $result = self::stdToArray($result);
 
-        return collect($result['return']);
+        return collect($result['return'])->get('terminal');
     }
 
 
