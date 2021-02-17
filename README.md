@@ -26,5 +26,8 @@ $dpd->getCostCommon (
 
 // get all available pickpoints
 $dpd->getPickPoints();
+
+// get all available terminals
+$dpd->getTerminals();
 ```
     
