@@ -17,7 +17,7 @@
         }
     },
     "require": {
-        "illuminate/support": "~5"
+        "illuminate/support": "9"
     },
     "extra": {
         "laravel": {
@@ -27,6 +27,11 @@
             "aliases": {
                "Dpd": "Pugofka\\Pdp\\DpdFacade"
             }
+        }
+    },
+    "config": {
+        "allow-plugins": {
+            "kylekatarnls/update-helper": true
         }
     }
 }
