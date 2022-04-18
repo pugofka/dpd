@@ -44,5 +44,11 @@ class DpdClient
         ];
     }
 
-
+    public function getTerminalsSelfDelivery2(): array
+    {
+        return [
+            'clientNumber' => $this->number,
+            'clientKey' => $this->key
+        ];
+    }
 }
